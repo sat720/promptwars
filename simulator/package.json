@@ -1,0 +1,9 @@
+{
+  "name": "flowstate-simulator",
+  "version": "1.0.0",
+  "description": "Mock Data Emitter for Hackathon Judging",
+  "main": "sim.js",
+  "scripts": {
+    "start": "node sim.js"
+  }
+}
