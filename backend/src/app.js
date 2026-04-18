@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const statusRoutes = require('./routes/status');
 const { startSimulator } = require('./services/simulator');
 
@@ -20,5 +21,15 @@ startSimulator();
 app.get('/api/health', (req, res) => res.status(200).json({ status: 'healthy', timestamp: new Date() }));
 app.use('/api/venues', statusRoutes);
 app.use('/api/recommendation', statusRoutes); // aliased for nudge endpoint
+
+// --- SERVE STATIC FRONTEND ---
+// We serve from a 'public' folder which will be populated in the Docker build
+const publicPath = path.join(__dirname, '../public');
+app.use(express.static(publicPath));
+
+// Catch-all route for SPA navigation
+app.get('*', (req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+});
 
 module.exports = app;

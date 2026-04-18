@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 
-const MOCK_API_URL = 'https://stadium-saathi-backend-81760530833.asia-south1.run.app/api';
+const MOCK_API_URL = window.location.origin.includes('localhost') 
+  ? 'https://stadium-saathi-backend-81760530833.asia-south1.run.app/api' 
+  : '/api';
 
 // --- MATH HELPERS for Polar Coordinate Pathing ---
 const getRad = (deg) => (deg - 90) * (Math.PI / 180);
