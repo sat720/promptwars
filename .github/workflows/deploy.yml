@@ -1,4 +1,4 @@
-name: Deploy FlowState to Google Cloud Run
+name: Deploy Stadium Saathi to Google Cloud Run
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: us-central1
-  SERVICE_NAME: flowstate-backend
+  SERVICE_NAME: stadium-saathi-backend
 
 jobs:
   test-and-deploy:
