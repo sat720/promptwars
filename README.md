@@ -1,61 +1,62 @@
-# 🏟️ Stadium Saathi: AI-Powered Crowd Orchestration
+# 🏟️ Stadium Saathi: AI-Powered Orchestration for High-Density Venues
 
-**Stadium Saathi** is an advanced intelligence system designed to optimize the attendee experience at large-scale sporting venues. By moving away from static heatmaps, it provides personalized, tactical "Smart Nudget" that balance venue load and slash waiting times.
-
----
-
-## 🧠 The Problem & Solving Strategy
-
-In a crowd of 50,000, **the shortest line is not always the fastest route.** Attendees often waste time walking across a stadium only to find the "shorter" line has filled up by the time they arrive.
-
-**Stadium Saathi** solves this using a **Hybrid Intelligence Engine**:
-
-1.  **Wait-Time Telemetry:** Real-time monitoring of 44 stadium nodes (Food, Gates, Washrooms).
-2.  **Navigation Math:** Calculates physical walking distance between the user and any destination.
-3.  **Strategic Analysis:** Uses AI to determine if the "Time Saved" in a queue is worth the "Time Spent" walking there.
+### **Vertical: Crowd Management & Venue Logistics**
+**Submission for PromptWars Virtual Hackathon**
 
 ---
 
-## 🖥️ The Human-Centric Interface
-
-The dashboard is designed for high-stress, high-density environments. When a user selects a filter (e.g., "Food"), the app presents a three-layer insight:
-
-1.  **📦 BOX 1: SHORTEST QUEUE (Yellow)**
-    - Identifies the place with the absolute lowest crowd density. Useful for users who are already nearby or don't mind the walk.
-2.  **📦 BOX 2: AI STRATEGIC INSIGHT (Blue)**
-    - Powered by **Gemini 1.5 Flash**. It contextually explains the trade-off.
-    - _Example: "Take the route to Gate North to save time. Although Stall B has a shorter line, walking there takes longer than the time you'd save."_
-3.  **📦 BOX 3: SMARTEST ROUTE (Green)**
-    - The mathematical "Gold Medal" choice. This node has the lowest **Total Estimated Time** (Walk + Wait).
+## 🚀 The Vision
+Attending a match with 100,000+ people shouldn't be a logistical nightmare. **Stadium Saathi** is a dual-portal intelligence system that solves the "Chaos of Scale." By integrating **Google Gemini 1.5 Flash** with real-time IoT telemetry, we've created a platform that doesn't just show data—it orchestrates it.
 
 ---
 
-## 🗺️ Advanced Physical Navigation
+## 🛠️ The Technical Edge: How It Works
 
-Unlike standard maps that draw "straight lines" through walls, Stadium Saathi uses **A\* Polar Pathfinding**:
+### 1. **The Gemini Orchestration Engine**
+Unlike standard apps that show a static "Red/Yellow/Green" heatmap, Stadium Saathi uses a **Deterministic Logic Loop** powered by Gemini.
+- **Stay vs. Go Analysis**: Gemini calculates the trade-off between walking distance and queue wait times. It suggests tactical "Nudges" (e.g., *"Stay in your seat—even though the North Gate is empty, the walk there takes 10 mins longer than your local wait."*)
+- **Contextual Awareness**: The AI understands if the user is a fan (seeking food/exits) or an admin (seeking security/medical status).
 
-- **Radial Geometry:** Navigation is mapped to the stadium's circular tiers (Lower, Upper, Concourse).
-- **Physical Constraints:** Routes are forced through designated sector stairwells and entrance/exit corridors.
-- **Visual Clarity:** Users see a realistic path following the actual architecture of the arena.
+### 2. **Interactive Smart Navigation**
+We built a custom pathfinding visualization. A **Smart Navigation Arrow** dynamically updates its position and angle on the map based on the user's current location and the least congested path calculated by our API.
 
----
-
-## 🛡️ Reliability: The Hybrid Fail-Safe
-
-To ensure the app never "breaks" during a massive event where cell signal might be weak:
-
-- **Option A (AI Mode):** Uses the Gemini 1.5 Flash API for human-like strategic advice.
-- **Option B (Math Mode):** If the network is lost or the API is unavailable, the system instantly reverts to its internal **Deterministic Math Engine**. The user still gets a smart recommendation based on local calculations.
-
----
-
-## 🚀 Technical Stack
-
-- **Frontend:** React 18, Vite, Tailwind CSS (Custom Neon-Noir Theme)
-- **Backend:** Node.js, Express.js
-- **AI:** Google Generative AI (Gemini 1.5 Flash)
-- **Simulation:** Real-time 44-Node Arena Matrix Simulator
+### 3. **Command Intel Analytics**
+The Admin portal is a full-scale **Crisis Dashboard**.
+- **Real-Time Gauges**: Direct visual insight into resource load (0-100%).
+- **Congestion Leaderboard**: Automatically ranks stadium sectors by "Pressure" scores.
+- **Predictive Trends**: Mock-AI modeling that identifies potential bottlenecks during high-stress moments like the "Innings Break."
 
 ---
 
-Created for the **PromptWars/Hackathon** | _Real-time. Real-Physical. Real-Intelligence._
+## 🛡️ Evaluation Focus Areas
+
+### **Code Quality & Architecture**
+- **Modular Design**: Clean separation between the React frontend, Node.js backend, and the IoT Simulation service.
+- **State Management**: Robust polling and real-time synchronization across all portals.
+
+### **Security & Responsibility**
+- **Google Secret Manager Integration**: Every sensitive API key (including Gemini) is pulled from Cloud Run's encrypted secret environment. No keys are ever hardcoded or leaked in the repository.
+
+### **Efficiency**
+- **Repo Weight**: Strictly under **1 MB** (purely source code, zero build artifacts).
+- **Latency**: Lightweight polling ensures the UI reflects real-time stadium changes within 3 seconds.
+
+### **Accessibility**
+- **Inclusive Design**: Full implementation of ARIA roles (`banner`, `main`, `navigation`) and `aria-labels` to ensure the platform is accessible to fans with diverse needs.
+
+---
+
+## 🧠 Assumptions & Logic
+- **Simulation**: To ensure a "Judge-Ready" experience, the app uses a **44-Node Arena Matrix Simulator** that generates realistic, non-random crowd drift patterns.
+- **Fail-Safe**: If the Gemini API is unreachable, the system automatically reverts to an internal **Mathematical Heuristic Engine**, ensuring fans are never left without guidance.
+
+---
+
+## 🏛️ Deployment
+- **Live URL**: [https://stadium-saathi-backend-81760530833.asia-south1.run.app](https://stadium-saathi-backend-81760530833.asia-south1.run.app)
+- **Hosted on**: Google Cloud Run (Containerized Docker build)
+
+---
+
+Developed with ❤️ for the **#PromptWarsVertical** community.
+*Google Services Used: Gemini AI, Cloud Run, Secret Manager.*

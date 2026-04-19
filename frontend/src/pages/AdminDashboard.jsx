@@ -83,14 +83,14 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-[#020617] flex flex-col md:flex-row text-white font-sans selection:bg-blue-500/30">
             
             {/* --- LEFT SIDEBAR NAV --- */}
-            <aside className="w-full md:w-64 bg-[#0f172a] border-r border-gray-800 flex flex-col md:min-h-screen sticky top-0 z-50 md:z-auto">
+            <aside role="complementary" aria-label="Admin Sidebar" className="w-full md:w-64 bg-[#0f172a] border-r border-gray-800 flex flex-col md:min-h-screen sticky top-0 z-50 md:z-auto">
                 <div className="p-6 border-b border-gray-800">
                     <Link to="/" className="text-xl font-black italic tracking-tighter hover:text-white transition-colors text-gray-400 block mb-2">
                         STADIUM<span className="text-blue-500">SAATHI</span>
                     </Link>
                     <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-[9px] font-black uppercase rounded border border-blue-500/20 tracking-widest">Command Center</span>
                 </div>
-                <nav className="flex-1 p-4 space-y-1">
+                <nav role="navigation" aria-label="Admin Navigation" className="flex-1 p-4 space-y-1">
                     <button onClick={() => setView('overview')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'overview' ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50'}`}>
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         Admin Dashboard
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
             </aside>
 
             {/* --- RIGHT MAIN CONTENT --- */}
-            <main className="flex-1 p-4 md:p-8 animate-in fade-in h-screen overflow-y-auto bg-[#020617]">
+            <main role="main" className="flex-1 p-4 md:p-8 animate-in fade-in h-screen overflow-y-auto bg-[#020617]">
                 
                 {/* VIEW: OVERVIEW (ALERT FEED PAGE) */}
                 {view === 'overview' && (

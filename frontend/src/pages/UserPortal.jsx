@@ -71,15 +71,15 @@ export default function UserPortal() {
     
     return (
         <div className="min-h-screen bg-stadium-dark flex flex-col text-white pb-20 md:pb-0">
-            <header className="bg-stadium-card border-b border-gray-700 p-4 sticky top-0 z-50 shadow-xl">
+            <header role="banner" className="bg-stadium-card border-b border-gray-700 p-4 sticky top-0 z-50 shadow-xl">
                 <div className="max-w-4xl mx-auto flex justify-between items-center">
                     <Link to="/" className="text-xl font-black italic tracking-tighter hover:text-neon-green transition-colors">
                         STADIUM<span className="text-neon-green">SAATHI</span>
                     </Link>
-                    <nav className="flex space-x-2 md:space-x-4">
-                        <Link to="/user" className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname === '/user' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Route</Link>
-                        <Link to="/user/map" className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname === '/user/map' ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Map</Link>
-                        <Link to="/user/food" className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname.includes('/food') ? 'bg-neon-yellow text-black shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Food</Link>
+                    <nav role="navigation" aria-label="Main Navigation" className="flex space-x-2 md:space-x-4">
+                        <Link to="/user" aria-current={loc.pathname === '/user' ? 'page' : undefined} className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname === '/user' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Route</Link>
+                        <Link to="/user/map" aria-current={loc.pathname === '/user/map' ? 'page' : undefined} className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname === '/user/map' ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Map</Link>
+                        <Link to="/user/food" aria-current={loc.pathname.includes('/food') ? 'page' : undefined} className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname.includes('/food') ? 'bg-neon-yellow text-black shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Food</Link>
                     </nav>
 
                     {/* NEW: PREMIUM COMPACT SCOREBOARD (WIDER & SLEEK) */}
@@ -114,7 +114,7 @@ export default function UserPortal() {
                 </div>
             )}
             
-            <main className="flex-1 w-full max-w-4xl mx-auto relative overflow-hidden">
+            <main role="main" className="flex-1 w-full max-w-4xl mx-auto relative overflow-hidden">
                 <Outlet />
             </main>
 
