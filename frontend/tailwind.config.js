@@ -7,13 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        'stadium-dark': '#0f172a',
-        'stadium-card': '#1e293b',
+        'stadium-dark': '#020617', // Deeper, more premium slate-black
+        'stadium-card': '#0f172a', // Rich navy-slate for contrast
+        'stadium-card-hover': '#1e293b',
         'neon-green': '#22c55e',
         'neon-red': '#ef4444',
         'neon-yellow': '#eab308'
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-animate')
+  ],
 }

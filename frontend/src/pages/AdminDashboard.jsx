@@ -126,7 +126,18 @@ export default function AdminDashboard() {
             </aside>
 
             {/* --- RIGHT MAIN CONTENT --- */}
-            <main role="main" className="flex-1 p-4 md:p-8 animate-in fade-in h-screen overflow-y-auto bg-[#020617]">
+            <main role="main" className="flex-1 p-4 md:p-8 animate-in fade-in slide-in-from-right-4 duration-500 h-screen overflow-y-auto bg-[#020617]">
+                
+                {/* GLOBAL AI MONITORING HEADER */}
+                <div className="flex justify-end mb-6 space-x-4">
+                    <div className="flex items-center space-x-3 bg-blue-500/5 border border-blue-500/10 px-4 py-2 rounded-xl backdrop-blur-sm self-end">
+                        <div className="relative">
+                            <div className="w-2 h-2 rounded-full bg-blue-400 absolute inset-0 animate-ping"></div>
+                            <div className="w-2 h-2 rounded-full bg-blue-500 relative"></div>
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/80">Gemini Neural Analytics: <span className="text-blue-400">SYNCED</span></span>
+                    </div>
+                </div>
                 
                 {/* VIEW: OVERVIEW (ALERT FEED PAGE) */}
                 {view === 'overview' && (

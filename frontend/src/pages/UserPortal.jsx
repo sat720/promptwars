@@ -96,6 +96,17 @@ export default function UserPortal() {
                         </div>
                     )}
                 </div>
+
+                {/* NEW: VISIBLE AI ORCHESTRATION STATUS */}
+                <div className="max-w-4xl mx-auto px-4 py-1.5 flex justify-end">
+                    <div className="flex items-center space-x-2 bg-neon-green/5 border border-neon-green/10 px-3 py-1 rounded-full animate-in fade-in slide-in-from-right-4 duration-1000 group hover:border-neon-green/40 transition-colors">
+                        <div className="relative">
+                            <div className="w-2 h-2 rounded-full bg-neon-green/50 animate-ping absolute inset-0"></div>
+                            <div className="w-2 h-2 rounded-full bg-neon-green relative shadow-[0_0_8px_#22c55e]"></div>
+                        </div>
+                        <span className="text-[8px] font-black text-neon-green uppercase tracking-[0.2em] leading-none">Gemini 1.5 Flash Orchestration Active</span>
+                    </div>
+                </div>
             </header>
 
             {/* GLOBAL ANNOUNCEMENT TICKER */}
@@ -114,7 +125,7 @@ export default function UserPortal() {
                 </div>
             )}
             
-            <main role="main" className="flex-1 w-full max-w-4xl mx-auto relative overflow-hidden">
+            <main role="main" className="flex-1 w-full max-w-4xl mx-auto relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">
                 <Outlet />
             </main>
 
