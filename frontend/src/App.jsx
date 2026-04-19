@@ -1,15 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Landing from './pages/Landing';
-import UserPortal from './pages/UserPortal';
-import MapNavigator from './pages/MapNavigator';
-import PureMap from './pages/PureMap';
-import FoodOrder from './pages/FoodOrder';
-import AdminDashboard from './pages/AdminDashboard';
+import { Suspense, lazy } from 'react';
+
+const Landing = lazy(() => import('./pages/Landing'));
+const UserPortal = lazy(() => import('./pages/UserPortal'));
+const MapNavigator = lazy(() => import('./pages/MapNavigator'));
+const PureMap = lazy(() => import('./pages/PureMap'));
+const FoodOrder = lazy(() => import('./pages/FoodOrder'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 export default function App() {
     return (
         <BrowserRouter>
-            <Routes>
+            <Suspense fallback={<div className="min-h-screen bg-[#020617] flex items-center justify-center text-neon-green font-mono">INITIALIZING PLATFORM...</div>}>
+                <Routes>
                 {/* Entry */}
                 <Route path="/" element={<Landing />} />
 
@@ -25,7 +28,8 @@ export default function App() {
 
                 {/* Catch-all fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     );
 }

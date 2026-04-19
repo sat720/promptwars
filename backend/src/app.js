@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const compression = require('compression');
 const statusRoutes = require('./routes/status');
 const platformRoutes = require('./routes/platform');
 const { startSimulator } = require('./services/simulator');
@@ -12,11 +14,15 @@ const app = express();
  * Optimized for evaluation metrics: Code Quality, Efficiency, Google Services
  */
 
+app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled for hackathon simplicity, basic protections retained
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 
-// Initialize Native IoT Simulator
-startSimulator();
+// Initialize Native IoT Simulator ONLY if not testing (prevents open handles)
+if (process.env.NODE_ENV !== 'test') {
+    startSimulator();
+}
 
 // API Endpoints
 app.get('/api/health', (req, res) => res.status(200).json({ status: 'healthy', timestamp: new Date() }));

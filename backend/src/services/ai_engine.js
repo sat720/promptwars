@@ -1,8 +1,25 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+const client = new SecretManagerServiceClient();
+
+let cachedApiKey = process.env.GEMINI_API_KEY;
+
+const fetchApiKey = async () => {
+    if (cachedApiKey) return cachedApiKey;
+    try {
+        const name = "projects/promptwarsid/secrets/GEMINI_API_KEY/versions/latest";
+        const [version] = await client.accessSecretVersion({ name });
+        cachedApiKey = version.payload.data.toString();
+        return cachedApiKey;
+    } catch (err) {
+        console.error("Failed to access Secret Manager:", err.message);
+        return null;
+    }
+};
 
 // Gemini Integration Logic
 const getSmartNudge = async (arenaData, currentLocation) => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = await fetchApiKey();
     
     // Fallback if no API key provided
     if (!apiKey) {

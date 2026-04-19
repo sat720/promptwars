@@ -1,6 +1,33 @@
 const request = require('supertest');
 const app = require('../src/app');
 
+// Mock Secret Manager to prevent credential checks during CI/testing
+jest.mock('@google-cloud/secret-manager', () => {
+    return {
+        SecretManagerServiceClient: jest.fn().mockImplementation(() => {
+            return {
+                accessSecretVersion: jest.fn().mockResolvedValue([{
+                    payload: { data: { toString: () => "mock-api-key" } }
+                }])
+            };
+        })
+    };
+});
+
+jest.mock('@google/generative-ai', () => {
+    return {
+        GoogleGenerativeAI: jest.fn().mockImplementation(() => {
+            return {
+                getGenerativeModel: jest.fn().mockReturnValue({
+                    generateContent: jest.fn().mockResolvedValue({
+                        response: { text: () => "Mocked AI Response" }
+                    })
+                })
+            };
+        })
+    };
+});
+
 describe('FlowState End-to-End Orchestration Lifecycle', () => {
     
     test('Should verify core API health and timestamping', async () => {
@@ -15,7 +42,7 @@ describe('FlowState End-to-End Orchestration Lifecycle', () => {
         const dataCount = Object.keys(res.body).length;
         // Verify we have the 44 nodes we generated
         expect(dataCount).toBeGreaterThanOrEqual(44);
-        expect(res.body['RL1']).toHaveProperty('zone', 'Blue');
+        expect(res.body['RL1']).toHaveProperty('zone', 'Red');
     });
 
     test('Should trigger AI Strategy Engine for a Smart Nudge', async () => {

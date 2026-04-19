@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const store = require('../services/store');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
+
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: { error: "Too many requests from this IP, please try again later." }
+});
+
+const validateInput = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    next();
+};
 
 // --- Announcements API ---
 router.get('/announcements', (req, res) => {
@@ -8,9 +22,12 @@ router.get('/announcements', (req, res) => {
     res.json(sorted);
 });
 
-router.post('/announcements', (req, res) => {
+router.post('/announcements', 
+    apiLimiter,
+    body('message').notEmpty().trim().escape().withMessage('Message is required'),
+    validateInput,
+    (req, res) => {
     const { message } = req.body;
-    if (!message) return res.status(400).json({ error: "Message is required" });
     
     const newAnnouncement = {
         id: store.nextAnnounceId++,
@@ -33,11 +50,12 @@ router.get('/orders', (req, res) => {
     res.json(sorted);
 });
 
-router.post('/orders', (req, res) => {
+router.post('/orders', 
+    body('items').isArray().notEmpty(),
+    body('seatInfo').notEmpty().trim().escape(),
+    validateInput,
+    (req, res) => {
     const { items, seatInfo, totalAmount } = req.body;
-    if (!items || !items.length || !seatInfo) {
-        return res.status(400).json({ error: "Items and seat info required" });
-    }
     
     const newOrder = {
         id: store.nextOrderId++,
@@ -78,7 +96,14 @@ router.patch('/alerts/:id/status', (req, res) => {
 });
 
 // SOS API integrated into alerts
-router.post('/sos', (req, res) => {
+router.post('/sos', 
+    apiLimiter,
+    body('name').notEmpty().trim().escape(),
+    body('mobile').notEmpty().trim().escape(),
+    body('location').notEmpty().trim().escape(),
+    body('landmarks').optional().trim().escape(),
+    validateInput,
+    (req, res) => {
     const { name, mobile, location, landmarks } = req.body;
     
     // Create dual entry: One for SOS log (for compatibility) and one for Alert Feed
