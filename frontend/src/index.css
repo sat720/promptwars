@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* Global Accessibility and Interactive Clarity Enhancements */
+  a, button, input, select, textarea {
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#020617] transition-all;
+  }
+}
+
 body {
   margin: 0;
   display: flex;

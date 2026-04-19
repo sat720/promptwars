@@ -14,10 +14,20 @@ const app = express();
  * Optimized for evaluation metrics: Code Quality, Efficiency, Google Services
  */
 
+// Strict CORS Configuration
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://stadium-saathi-backend-81760530833.asia-south1.run.app', 'https://sat720.github.io'] 
+        : '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+};
+
 app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled for hackathon simplicity, basic protections retained
 app.use(compression());
-app.use(cors());
-app.use(express.json());
+app.use(cors(corsOptions));
+app.use(express.json({ limit: '10kb' })); // Limit JSON parsing to prevent huge payloads
 
 // Initialize Native IoT Simulator ONLY if not testing (prevents open handles)
 if (process.env.NODE_ENV !== 'test') {
