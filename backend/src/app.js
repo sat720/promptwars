@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const statusRoutes = require('./routes/status');
+const platformRoutes = require('./routes/platform');
 const { startSimulator } = require('./services/simulator');
 
 const app = express();
@@ -21,6 +22,8 @@ startSimulator();
 app.get('/api/health', (req, res) => res.status(200).json({ status: 'healthy', timestamp: new Date() }));
 app.use('/api/venues', statusRoutes);
 app.use('/api/recommendation', statusRoutes); // aliased for nudge endpoint
+app.use('/api/platform', platformRoutes); // Platform APIs (orders, announcements)
+
 
 // --- SERVE STATIC FRONTEND ---
 // We serve from a 'public' folder which will be populated in the Docker build
