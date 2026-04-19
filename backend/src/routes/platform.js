@@ -136,8 +136,6 @@ router.get('/score', (req, res) => {
 
 const { triggerScenario } = require('../services/simulator');
 
-// ... existing code ...
-
 // --- System Utilities ---
 router.post('/scenario', checkAdminAuth, (req, res) => {
     const { type } = req.body;
