@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const MENU_ITEMS = [
     { id: 1, name: "Neon Slice Pizza", price: 6.50, prep: 5 },
@@ -13,8 +13,20 @@ const MOCK_API_URL = window.location.origin.includes('localhost')
 
 export default function FoodOrder() {
     const [cart, setCart] = useState({});
-    const [seat, setSeat] = useState('BL1');
+    const [seat, setSeat] = useState('');
     const [status, setStatus] = useState('');
+    const [allSeats, setAllSeats] = useState([]);
+
+    useEffect(() => {
+        fetch(`${MOCK_API_URL}/venues/status`)
+            .then(res => res.json())
+            .then(data => {
+                const seats = Object.keys(data).filter(k => data[k].type === 'seat');
+                setAllSeats(seats);
+                if (seats.length > 0) setSeat(seats[0]);
+            })
+            .catch(() => {});
+    }, []);
 
     const addToCart = (id) => {
         setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -99,13 +111,15 @@ export default function FoodOrder() {
 
                         <div className="mb-6">
                             <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Delivery Seat</label>
-                            <input 
-                                type="text"
+                            <select 
                                 value={seat}
-                                onChange={(e) => setSeat(e.target.value.toUpperCase())}
-                                className="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-white font-mono outline-none focus:border-neon-yellow transition-colors relative z-10"
-                                placeholder="e.g. BL1"
-                            />
+                                onChange={(e) => setSeat(e.target.value)}
+                                className="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-white font-mono outline-none focus:border-neon-yellow transition-colors relative z-10 appearance-none shadow-lg cursor-pointer"
+                            >
+                                {allSeats.map(s => <option key={s} value={s}>{s}</option>)}
+                                {allSeats.length === 0 && <option value="" disabled>Loading seats...</option>}
+                            </select>
+                            <div className="text-[10px] text-gray-500 mt-1 italic leading-tight">Deliver straight to your chair.</div>
                         </div>
 
                         <button 

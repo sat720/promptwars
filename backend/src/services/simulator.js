@@ -42,7 +42,10 @@ const generateInitialData = () => {
 
 let arenaState = generateInitialData();
 
+const store = require('./store');
+
 const startSimulator = () => {
+    // --- Existing IoT Zone Simulation ---
     setInterval(() => {
         const keys = Object.keys(arenaState);
         const randomKey = keys[Math.floor(Math.random() * keys.length)];
@@ -57,6 +60,67 @@ const startSimulator = () => {
         arenaState[randomKey].waitTimeMins = newTime;
         arenaState[randomKey].status = getStatusLabel(newTime);
     }, 1500);
+
+    // --- Live Cricket Score Simulation ---
+    setInterval(() => {
+        if (!store.liveScore) return;
+        
+        // Update overs logic
+        let overParts = store.liveScore.overs.split('.').map(Number);
+        
+        // Check for 50 Over Reset
+        if (overParts[0] >= 50) {
+            store.liveScore.scoreA = "0/0";
+            store.liveScore.scoreB = "---";
+            store.liveScore.overs = "0.0";
+            store.liveScore.status = "New Match Started";
+            return;
+        }
+
+        // Randomly update runs
+        const runsArr = [0, 0, 1, 1, 1, 2, 4, 6];
+        const addedRuns = runsArr[Math.floor(Math.random() * runsArr.length)];
+        
+        let [runs, wickets] = store.liveScore.scoreA.split('/').map(Number);
+        runs += addedRuns;
+        
+        // Randomly add wicket (low chance)
+        if (Math.random() > 0.98 && wickets < 10) {
+            wickets += 1;
+        }
+        
+        store.liveScore.scoreA = `${runs}/${wickets}`;
+        
+        overParts[1] += 1;
+        if (overParts[1] >= 6) {
+            overParts[0] += 1;
+            overParts[1] = 0;
+        }
+        store.liveScore.overs = `${overParts[0]}.${overParts[1]}`;
+        
+        // Update status for variety
+        if (wickets >= 10) {
+            store.liveScore.status = "Innings Over";
+            overParts[0] = 50; // Force reset next interval
+        } else {
+            store.liveScore.status = "IND batting";
+        }
+    }, 4000);
+
+    // --- Periodic Platform Refresh (Every 3 Hours) ---
+    setInterval(() => {
+        console.log("Auto-resetting platform for new event cycle...");
+        store.orders = [];
+        store.announcements = [
+            { id: 1, message: "Welcome to the Stadium! Please follow floor markings.", timestamp: Date.now() },
+            { id: 2, message: "Match starting soon. Security checks in progress.", timestamp: Date.now() }
+        ];
+        store.alerts = store.alerts.filter(a => a.type === 'LOST' || a.type === 'MEDICAL'); // Keep some persistent types if needed, or wipe all
+        store.alerts = [
+            { id: 101, type: 'CROWD', message: 'Heavy congestion at Gate 4. Use Gate 2 for faster entry.', location: 'Gate 4', status: 'Pending', priority: 'MEDIUM', timestamp: Date.now() },
+            { id: 102, type: 'SECURITY', message: 'Baggage scanners at North Stand are operational.', location: 'North Stand', status: 'Pending', priority: 'LOW', timestamp: Date.now() }
+        ];
+    }, 3 * 60 * 60 * 1000); 
 };
 
 module.exports = {

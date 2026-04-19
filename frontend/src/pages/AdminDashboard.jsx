@@ -6,11 +6,14 @@ const MOCK_API_URL = window.location.origin.includes('localhost')
   : '/api';
 
 export default function AdminDashboard() {
+    const [showWaitingDetails, setShowWaitingDetails] = useState(false);
+    const [analyticsFilter, setAnalyticsFilter] = useState('all');
     const [view, setView] = useState('overview'); // overview, orders, broadcast
     const [orders, setOrders] = useState([]);
     const [announcements, setAnnouncements] = useState([]);
     const [alerts, setAlerts] = useState([]);
     const [zoneData, setZoneData] = useState({});
+    const [liveScore, setLiveScore] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [alertFilter, setAlertFilter] = useState('All');
 
@@ -19,6 +22,7 @@ export default function AdminDashboard() {
         fetch(`${MOCK_API_URL}/platform/announcements`).then(res => res.json()).then(setAnnouncements).catch(() => {});
         fetch(`${MOCK_API_URL}/platform/alerts`).then(res => res.json()).then(setAlerts).catch(() => {});
         fetch(`${MOCK_API_URL}/venues/status`).then(res => res.json()).then(setZoneData).catch(() => {});
+        fetch(`${MOCK_API_URL}/platform/score`).then(res => res.json()).then(setLiveScore).catch(() => {});
     };
 
     useEffect(() => {
@@ -99,6 +103,10 @@ export default function AdminDashboard() {
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                         Broadcast Alerts
                     </button>
+                    <button onClick={() => setView('analytics')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'analytics' ? 'bg-neon-green/10 border border-neon-green/30 text-neon-green shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'text-gray-400 hover:bg-gray-800/50'}`}>
+                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Command Analytics
+                    </button>
                 </nav>
 
                 <div className="p-4 mt-auto border-t border-gray-800">
@@ -141,6 +149,28 @@ export default function AdminDashboard() {
                                         <span className="text-xs text-gray-500">(Full Potential)</span>
                                     </div>
                                     <div className="mt-2 text-[10px] text-blue-400 font-bold uppercase">Realized: ${realizedRevenue.toFixed(2)}</div>
+                                </div>
+                                <div className="bg-[#0f172a] border border-blue-500/30 rounded-2xl p-5 shadow-sm relative overflow-hidden group">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block">Live Match Status</span>
+                                        <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                                    </div>
+                                    {liveScore ? (
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-black text-gray-400 uppercase leading-none">
+                                                    {liveScore.teamA} <span className="text-gray-600 font-bold mx-0.5">v</span> {liveScore.teamB}
+                                                </span>
+                                                <span className="text-3xl font-black text-white leading-none mt-2">{liveScore.scoreA}</span>
+                                            </div>
+                                            <div className="text-right flex flex-col items-end">
+                                                <span className="text-sm font-black text-blue-400 font-mono italic">{liveScore.overs} OV</span>
+                                                <span className="text-[10px] font-black text-gray-500 uppercase tracking-tighter mt-1">{liveScore.status}</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <span className="text-gray-600 italic text-xs">Waiting for score...</span>
+                                    )}
                                 </div>
                                 <div className="bg-[#0f172a] border border-red-500/20 rounded-2xl p-5 shadow-[0_4px_20px_-10px_rgba(239,68,68,0.5)]">
                                     <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest block mb-1">Emergency SOS Status</span>
@@ -328,6 +358,174 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* VIEW: ANALYTICS (REAL-TIME COMMAND INTELLIGENCE) */}
+                {view === 'analytics' && (
+                    <div className="animate-in slide-in-from-right duration-500">
+                        <div className="mb-8">
+                            <h2 className="text-4xl font-black text-white uppercase tracking-tighter mb-2 italic">Command Intel Analytics</h2>
+                            <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">Real-time predictive congestion modeling</p>
+                        </div>
+
+                        {/* ANALYTICS GRID */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                            
+                            {/* CATEGORY SCORES (0-100%) */}
+                            <div className="bg-[#0f172a] border border-gray-800 rounded-[2rem] p-8 shadow-2xl">
+                                <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-8 flex items-center">
+                                    <span className="w-2 h-2 bg-neon-green rounded-full mr-3 animate-ping"></span>
+                                    Resource Congestion Scores
+                                </h3>
+                                
+                                <div className="space-y-10">
+                                    {/* Overall Gauge */}
+                                    {(() => {
+                                        const items = Object.values(zoneData);
+                                        const avgWait = items.length ? items.reduce((s, i) => s + (i.waitTimeMins || 0), 0) / items.length : 0;
+                                        const score = Math.min(100, Math.round((avgWait / 20) * 100)); // 20m is 100% capacity
+                                        return (
+                                            <div className="relative pt-1">
+                                                <div className="flex mb-2 items-center justify-between">
+                                                    <div><span className="text-[10px] font-black inline-block py-1 px-2 uppercase rounded-full text-neon-green bg-neon-green/10">Overall Stadium Pulse</span></div>
+                                                    <div className="text-right"><span className="text-2xl font-black inline-block text-white">{score}%</span></div>
+                                                </div>
+                                                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded-full bg-gray-800 border border-gray-700">
+                                                    <div style={{ width: `${score}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ${score > 80 ? 'bg-red-500' : score > 50 ? 'bg-yellow-500' : 'bg-neon-green'}`}></div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+
+                                    <div className="grid grid-cols-3 gap-6">
+                                        {[
+                                            { label: 'Gates', type: 'gate', color: 'blue' },
+                                            { label: 'Washrooms', type: 'restroom', color: 'red' },
+                                            { label: 'Food Stalls', type: 'food', color: 'yellow' }
+                                        ].map(cat => {
+                                            const cats = Object.values(zoneData).filter(z => z.type === cat.type);
+                                            const avg = cats.length ? cats.reduce((s, i) => s + (i.waitTimeMins || 0), 0) / cats.length : 0;
+                                            const score = Math.min(100, Math.round((avg / 15) * 100));
+                                            return (
+                                                <div key={cat.type} className="flex flex-col items-center">
+                                                    <div className={`text-xl font-black mb-1 ${score > 70 ? 'text-red-500' : 'text-white'}`}>{score}%</div>
+                                                    <div className="text-[8px] font-black text-gray-500 uppercase tracking-widest">{cat.label}</div>
+                                                    <div className="w-full h-1 bg-gray-800 rounded-full mt-3 overflow-hidden">
+                                                        <div style={{ width: `${score}%` }} className={`h-full transition-all duration-1000 ${cat.color === 'blue' ? 'bg-blue-500' : cat.color === 'red' ? 'bg-red-500' : 'bg-yellow-500'}`}></div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ZONE LEADERBOARD */}
+                            <div className="bg-[#0f172a] border border-gray-800 rounded-[2rem] p-8 shadow-2xl">
+                                <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Zone Congestion Table</h3>
+                                <div className="space-y-4">
+                                    {['Red', 'Blue', 'Green', 'Yellow'].map(zone => {
+                                        const zoneItems = Object.values(zoneData).filter(z => z.zone === zone);
+                                        const avgWait = zoneItems.length ? zoneItems.reduce((s, i) => s + (i.waitTimeMins || 0), 0) / zoneItems.length : 0;
+                                        return (
+                                            <div key={zone} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-2xl border border-gray-800/50">
+                                                <div className="flex items-center">
+                                                    <div className={`w-3 h-3 rounded-full mr-4 ${zone==='Red'?'bg-red-500':zone==='Blue'?'bg-blue-500':zone==='Green'?'bg-green-500':'bg-yellow-500'}`}></div>
+                                                    <span className="font-bold text-gray-300 uppercase tracking-tight">{zone} Zone</span>
+                                                </div>
+                                                <div className="flex items-baseline space-x-2">
+                                                    <span className="text-lg font-black text-white">{Math.round(avgWait)}</span>
+                                                    <span className="text-[9px] text-gray-500 uppercase font-mono">min avg</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    }).sort((a, b) => b.props.children[1].props.children[0].props.children - a.props.children[1].props.children[0].props.children)}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PREDICTIVE INSIGHTS */}
+                        <div className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-neon-green/20 rounded-[2rem] p-10 shadow-2xl relative overflow-hidden mb-10">
+                            <div className="absolute top-0 right-0 p-8 opacity-10">
+                                <svg className="w-40 h-40 text-neon-green" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"></path></svg>
+                            </div>
+                            <h3 className="text-xs font-black text-neon-green uppercase tracking-[0.3em] mb-6">AI Predictive Trend</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                <div className="space-y-2">
+                                    <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block">Next Congestion Peak</span>
+                                    <span className="text-2xl font-black text-white">Innings Break</span>
+                                    <p className="text-xs text-gray-400 italic">Expected surge in Food Category (+45%)</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block">Resource Optimization</span>
+                                    <span className="text-2xl font-black text-white italic">Gate 4 Divert</span>
+                                    <p className="text-xs text-gray-400 italic">Recommend redirecting arrivals to West Gate</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block">Safety Efficiency</span>
+                                    <span className="text-2xl font-black text-white">98.2%</span>
+                                    <p className="text-xs text-gray-400 italic">System health and response latency</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* DETAILED WAITING LINES REFINEMENT (BOTTOM SECTION) */}
+                        <div className="mt-12 border-t border-gray-800 pt-10">
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+                                <button 
+                                    onClick={() => setShowWaitingDetails(!showWaitingDetails)}
+                                    className={`px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center shadow-2xl ${showWaitingDetails ? 'bg-neon-yellow text-black' : 'bg-gray-900 text-gray-500 border border-gray-800 hover:border-neon-yellow'}`}
+                                >
+                                    <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    {showWaitingDetails ? 'Close Waiting Intel' : 'Expand Waiting Lines'}
+                                </button>
+
+                                {showWaitingDetails && (
+                                    <div className="flex items-center bg-gray-950 p-1.5 rounded-2xl border border-gray-800 gap-1 overflow-x-auto max-w-full">
+                                        {[
+                                            { id: 'all', label: 'All Resources' },
+                                            { id: 'food', label: 'Food Stalls' },
+                                            { id: 'restroom', label: 'Washrooms' },
+                                            { id: 'gate', label: 'Gates & Entry' }
+                                        ].map(f => (
+                                            <button 
+                                                key={f.id}
+                                                onClick={() => setAnalyticsFilter(f.id)}
+                                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${analyticsFilter === f.id ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                                            >
+                                                {f.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {showWaitingDetails && (
+                                <div className="animate-in fade-in zoom-in duration-500">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {Object.entries(zoneData)
+                                            .filter(([_, d]) => d.type !== 'seat' && (analyticsFilter === 'all' || d.type === analyticsFilter))
+                                            .sort((a, b) => b[1].waitTimeMins - a[1].waitTimeMins)
+                                            .map(([nodeName, data]) => (
+                                                <div key={nodeName} className="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center group hover:border-neon-yellow transition-all">
+                                                    <div className="overflow-hidden">
+                                                        <div className="text-[9px] font-black text-gray-500 uppercase truncate mb-1">{nodeName}</div>
+                                                        <div className="flex items-center">
+                                                            <span className={`w-1.5 h-1.5 rounded-full mr-2 ${data.status === 'Heavy' ? 'bg-red-500' : data.status === 'Moderate' ? 'bg-yellow-500' : 'bg-neon-green'}`}></span>
+                                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{data.status}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <span className="text-lg font-black text-white">{data.waitTimeMins}</span>
+                                                        <span className="text-[8px] font-black text-gray-600 ml-1">MIN</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

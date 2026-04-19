@@ -14,6 +14,7 @@ export default function UserPortal() {
     const [sosStatus, setSosStatus] = useState('');
     const [zoneData, setZoneData] = useState({});
     const [announcements, setAnnouncements] = useState([]);
+    const [liveScore, setLiveScore] = useState(null);
 
     useEffect(() => {
         // Fetch zones for the dropdown just once
@@ -31,7 +32,21 @@ export default function UserPortal() {
         };
         fetchAnnouncements();
         const int = setInterval(fetchAnnouncements, 3000);
-        return () => clearInterval(int);
+
+        // Fetch live score
+        const fetchScore = () => {
+            fetch(`${MOCK_API_URL}/platform/score`)
+                .then(res => res.json())
+                .then(setLiveScore)
+                .catch(()=>{});
+        };
+        fetchScore();
+        const scoreInt = setInterval(fetchScore, 5000);
+
+        return () => {
+            clearInterval(int);
+            clearInterval(scoreInt);
+        };
     }, []);
 
     const submitSos = async (e) => {
@@ -66,6 +81,20 @@ export default function UserPortal() {
                         <Link to="/user/map" className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname === '/user/map' ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Map</Link>
                         <Link to="/user/food" className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all flex items-center ${loc.pathname.includes('/food') ? 'bg-neon-yellow text-black shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>Food</Link>
                     </nav>
+
+                    {/* NEW: PREMIUM COMPACT SCOREBOARD (WIDER & SLEEK) */}
+                    {liveScore && (
+                        <div className="hidden lg:flex items-center bg-gray-900/40 border border-gray-700/50 rounded-xl px-4 py-1.5 ml-4 min-w-[200px] shadow-inner group hover:border-neon-green transition-all duration-300">
+                            <div className="flex flex-col border-r border-gray-800 pr-3 mr-3">
+                                <span className="text-[10px] font-black text-neon-green tracking-tighter uppercase leading-none">{liveScore.teamA} <span className="text-gray-500 font-bold mx-0.5">v</span> {liveScore.teamB}</span>
+                                <span className="text-xl font-black text-white leading-none mt-1">{liveScore.scoreA}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{liveScore.overs} OV</span>
+                                <span className="text-[9px] font-black text-blue-400 uppercase tracking-tighter mt-0.5 whitespace-nowrap">{liveScore.status}</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </header>
 
@@ -76,15 +105,6 @@ export default function UserPortal() {
                         {[...announcements].reverse().slice(0, 3).map(a => (
                             <div key={a.id} className="flex items-center">
                                 <span className="w-2 h-2 bg-white rounded-full mr-3 animate-pulse"></span>
-                                <span className="text-[11px] font-black uppercase tracking-wider text-white">
-                                    Broadcast: {a.message}
-                                </span>
-                            </div>
-                        ))}
-                        {/* Repeat for continuous marquee effect if needed */}
-                        {[...announcements].reverse().slice(0, 3).map(a => (
-                            <div key={`dup-${a.id}`} className="flex items-center opacity-70">
-                                <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
                                 <span className="text-[11px] font-black uppercase tracking-wider text-white">
                                     Broadcast: {a.message}
                                 </span>

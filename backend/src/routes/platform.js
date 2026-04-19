@@ -97,6 +97,11 @@ router.post('/sos', (req, res) => {
     res.status(201).json(newAlert);
 });
 
+// --- Live Score API ---
+router.get('/score', (req, res) => {
+    res.json(store.liveScore);
+});
+
 // --- System Utilities ---
 router.post('/reset', (req, res) => {
     // Reset to initial state
