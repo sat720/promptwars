@@ -123,7 +123,26 @@ const startSimulator = () => {
     }, 3 * 60 * 60 * 1000); 
 };
 
+const triggerScenario = (type) => {
+    switch (type) {
+        case 'INNING_BREAK':
+            Object.keys(arenaState).forEach(k => {
+                if (arenaState[k].type === 'food') arenaState[k].waitTimeMins = 35;
+                if (arenaState[k].type === 'restroom') arenaState[k].waitTimeMins = 40;
+            });
+            break;
+        case 'GATE_CLOSURE':
+            arenaState['Gate East'].waitTimeMins = 50;
+            arenaState['Gate South'].waitTimeMins = 45;
+            break;
+        case 'NORMAL':
+            arenaState = generateInitialData();
+            break;
+    }
+};
+
 module.exports = {
     getArenaState: () => arenaState,
-    startSimulator
+    startSimulator,
+    triggerScenario
 };

@@ -16,6 +16,8 @@ export default function AdminDashboard() {
     const [liveScore, setLiveScore] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [alertFilter, setAlertFilter] = useState('All');
+    const [stats, setStats] = useState({ seats: 0, food: 0 });
+    const [tacticalBriefing, setTacticalBriefing] = useState('Initializing Tactical Command Link...');
 
     const fetchData = () => {
         fetch(`${MOCK_API_URL}/platform/orders`).then(res => res.json()).then(setOrders).catch(() => {});
@@ -25,10 +27,41 @@ export default function AdminDashboard() {
         fetch(`${MOCK_API_URL}/platform/score`).then(res => res.json()).then(setLiveScore).catch(() => {});
     };
 
+    const fetchTacticalBriefing = async () => {
+        try {
+            const res = await fetch(`${MOCK_API_URL}/recommendation/tactical-briefing`);
+            const data = await res.json();
+            setTacticalBriefing(data.briefing);
+        } catch (err) {
+            console.error("Briefing failed");
+        }
+    };
+
+    const triggerScenario = async (type) => {
+        try {
+            await fetch(`${MOCK_API_URL}/platform/scenario`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-admin-secret': 'stadium-saathi-pro-secret' 
+                },
+                body: JSON.stringify({ type })
+            });
+            fetchData();
+            fetchTacticalBriefing();
+        } catch (err) {
+            console.error("Scenario trigger failed");
+        }
+    };
+
     useEffect(() => {
         fetchData();
-        const int = setInterval(fetchData, 3000);
-        return () => clearInterval(int);
+        fetchTacticalBriefing();
+        const interval = setInterval(() => {
+            fetchData();
+            fetchTacticalBriefing();
+        }, 8000);
+        return () => clearInterval(interval);
     }, []);
 
     const postAnnouncement = async () => {
@@ -125,18 +158,34 @@ export default function AdminDashboard() {
                     </button>
                 </nav>
 
-                <div className="p-4 mt-auto border-t border-gray-800">
+                <div className="p-4 mt-auto border-t border-gray-800 space-y-2">
+                    <div className="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-2 px-1">Scenario Simulation</div>
+                    <button 
+                        onClick={() => triggerScenario('INNING_BREAK')}
+                        className="w-full text-left px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-[8px] transition-all bg-yellow-600/10 border border-yellow-500/20 text-yellow-500 hover:bg-yellow-600/20"
+                    >
+                        Trigger: Innings Break
+                    </button>
+                    <button 
+                        onClick={() => triggerScenario('GATE_CLOSURE')}
+                        className="w-full text-left px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-[8px] transition-all bg-orange-600/10 border border-orange-500/20 text-orange-500 hover:bg-orange-600/20"
+                    >
+                        Trigger: Gate Closure
+                    </button>
                     <button 
                         onClick={async () => {
                             if(window.confirm('Reset all live data to Judge-ready Fresh State?')) {
-                                await fetch(`${MOCK_API_URL}/platform/reset`, { method: 'POST' });
+                                await fetch(`${MOCK_API_URL}/platform/reset`, { 
+                                    method: 'POST',
+                                    headers: { 'x-admin-secret': 'stadium-saathi-pro-secret' }
+                                });
                                 fetchData();
                             }
                         }}
-                        className="w-full text-left px-4 py-3 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all flex items-center bg-red-600/10 border border-red-500/30 text-red-500 hover:bg-red-600/20"
+                        className="w-full text-left px-4 py-2 rounded-lg font-black uppercase tracking-widest text-[8px] transition-all flex items-center bg-red-600/10 border border-red-500/30 text-red-500 hover:bg-red-600/20"
                     >
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Reset for Demo
+                        <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Full System Reset
                     </button>
                 </div>
             </aside>
@@ -157,7 +206,27 @@ export default function AdminDashboard() {
                 
                 {/* VIEW: OVERVIEW (ALERT FEED PAGE) */}
                 {view === 'overview' && (
-                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                    <div className="space-y-8">
+                        {/* ELITE FEATURE: AI TACTICAL INTELLIGENCE BOX */}
+                        <div className="bg-gradient-to-r from-blue-900/40 to-[#0f172a] border border-blue-500/30 rounded-3xl p-6 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <svg className="w-24 h-24 text-blue-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                            </div>
+                            <div className="relative z-10">
+                                <div className="flex items-center space-x-3 mb-3">
+                                    <div className="bg-blue-500/20 p-1.5 rounded-lg border border-blue-500/40">
+                                        <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    </div>
+                                    <span className="text-xs font-black text-blue-400 uppercase tracking-[0.2em]">Live Tactical Intelligence Briefing</span>
+                                </div>
+                                <p className="text-lg font-bold text-white tracking-tight leading-relaxed max-w-4xl animate-pulse-slow">
+                                    "{tacticalBriefing}"
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+
                         
                         {/* LEFT COLUMN: STATS & SUMMARY */}
                         <div className="xl:col-span-4 space-y-6">
