@@ -11,6 +11,7 @@
     "test:silent": "jest --silent"
   },
   "dependencies": {
+    "@google-cloud/logging": "^11.2.1",
     "@google-cloud/secret-manager": "^6.1.1",
     "@google/generative-ai": "^0.11.0",
     "compression": "^1.8.1",
@@ -18,7 +19,8 @@
     "express": "^4.19.2",
     "express-rate-limit": "^8.3.2",
     "express-validator": "^7.3.2",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "node-cache": "^5.1.2"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",

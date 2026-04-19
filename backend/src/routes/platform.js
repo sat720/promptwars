@@ -3,6 +3,8 @@ const router = express.Router();
 const store = require('../services/store');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
+const { checkAdminAuth } = require('../middleware/auth');
+const { auditLog } = require('../services/logger');
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
@@ -23,11 +25,15 @@ router.get('/announcements', (req, res) => {
 });
 
 router.post('/announcements', 
+    checkAdminAuth, // Advanced Access Control
     apiLimiter,
     body('message').notEmpty().trim().escape().withMessage('Message is required'),
     validateInput,
     (req, res) => {
     const { message } = req.body;
+    
+    auditLog(`New Announcement Posted: ${message.substring(0, 20)}...`, 'INFO');
+
     
     const newAnnouncement = {
         id: store.nextAnnounceId++,
@@ -38,9 +44,10 @@ router.post('/announcements',
     res.status(201).json(newAnnouncement);
 });
 
-router.delete('/announcements/:id', (req, res) => {
+router.delete('/announcements/:id', checkAdminAuth, (req, res) => {
     const id = parseInt(req.params.id);
     store.announcements = store.announcements.filter(a => a.id !== id);
+    auditLog(`Announcement Deleted ID: ${id}`, 'WARNING');
     res.status(200).json({ success: true });
 });
 
@@ -128,8 +135,10 @@ router.get('/score', (req, res) => {
 });
 
 // --- System Utilities ---
-router.post('/reset', (req, res) => {
+router.post('/reset', checkAdminAuth, (req, res) => {
     // Reset to initial state
+    auditLog('System Hard Reset Triggered by Admin', 'CRITICAL');
+
     store.announcements = [
         { id: 1, message: "Welcome to the Stadium! Enjoy the event.", timestamp: Date.now() },
         { id: 2, message: "Food stalls in the Green Zone currently have the shortest wait.", timestamp: Date.now() - 600000 }

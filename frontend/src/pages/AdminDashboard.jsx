@@ -91,19 +91,35 @@ export default function AdminDashboard() {
                     <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-[9px] font-black uppercase rounded border border-blue-500/20 tracking-widest">Command Center</span>
                 </div>
                 <nav role="navigation" aria-label="Admin Navigation" className="flex-1 p-4 space-y-1">
-                    <button onClick={() => setView('overview')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'overview' ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50'}`}>
+                    <button 
+                        onClick={() => setView('overview')} 
+                        aria-current={view === 'overview' ? 'page' : undefined}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'overview' ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50'}`}
+                    >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         Admin Dashboard
                     </button>
-                    <button onClick={() => setView('orders')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'orders' ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-500' : 'text-gray-400 hover:bg-gray-800/50'}`}>
+                    <button 
+                        onClick={() => setView('orders')} 
+                        aria-current={view === 'orders' ? 'page' : undefined}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'orders' ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-500' : 'text-gray-400 hover:bg-gray-800/50'}`}
+                    >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                         Food Operations
                     </button>
-                    <button onClick={() => setView('broadcast')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'broadcast' ? 'bg-blue-500/10 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50'}`}>
+                    <button 
+                        onClick={() => setView('broadcast')} 
+                        aria-current={view === 'broadcast' ? 'page' : undefined}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'broadcast' ? 'bg-blue-500/10 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50'}`}
+                    >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                         Broadcast Alerts
                     </button>
-                    <button onClick={() => setView('analytics')} className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'analytics' ? 'bg-neon-green/10 border border-neon-green/30 text-neon-green shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'text-gray-400 hover:bg-gray-800/50'}`}>
+                    <button 
+                        onClick={() => setView('analytics')} 
+                        aria-current={view === 'analytics' ? 'page' : undefined}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center ${view === 'analytics' ? 'bg-neon-green/10 border border-neon-green/30 text-neon-green shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'text-gray-400 hover:bg-gray-800/50'}`}
+                    >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         Command Analytics
                     </button>
