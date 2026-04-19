@@ -134,19 +134,9 @@ router.get('/score', (req, res) => {
     res.json(store.liveScore);
 });
 
-const { triggerScenario } = require('../services/simulator');
-
 // --- System Utilities ---
-router.post('/scenario', checkAdminAuth, (req, res) => {
-    const { type } = req.body;
-    triggerScenario(type);
-    auditLog(`Simulation Scenario Triggered: ${type}`, 'WARNING');
-    res.status(200).json({ success: true, message: `Scenario ${type} active` });
-});
-
 router.post('/reset', checkAdminAuth, (req, res) => {
     // Reset to initial state
-    triggerScenario('NORMAL');
     auditLog('System Hard Reset Triggered by Admin', 'CRITICAL');
 
     store.announcements = [

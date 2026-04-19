@@ -269,13 +269,9 @@ function MapNavigator() {
 
       return (
           <div className="min-h-screen bg-stadium-dark px-4 py-8 flex flex-col items-center">
-              <header className="w-full max-w-4xl px-4 flex justify-between items-center mb-4">
-                 <div className="flex flex-col">
+              <header className="w-full max-w-4xl px-4 flex justify-between items-center mb-6">
+                 <div>
                      <h1 className="text-4xl text-white font-black italic shadow-text tracking-tighter cursor-pointer" onClick={() => setView('dashboard')}>ARENA MAP</h1>
-                     <div className="flex items-center space-x-2 mt-1">
-                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400">Neural Pathway Sync Active</span>
-                     </div>
                  </div>
                  <button onClick={() => setView('dashboard')} className="px-6 py-2 border border-gray-600 bg-gray-800 text-white rounded-full hover:bg-neon-green hover:text-black font-bold uppercase transition-all shadow-lg active:scale-95 text-xs">
                      Back
@@ -341,30 +337,20 @@ function MapNavigator() {
                         {/* Center Pitch */}
                         <rect x="175" y="150" width="50" height="100" fill="#064e3b" stroke="#10b981" rx="10" />
 
-                        {/* Advanced Orthogonal/Radial SVG Routing Path with Neural Glow */}
+                        {/* Advanced Orthogonal/Radial SVG Routing Path */}
                         {endNode && (
-                            <g>
-                                <path 
-                                    d={generateRealisticPath(startNode, endNode)}
-                                    fill="none" stroke={routeColor} strokeWidth="8" strokeLinecap="round" opacity="0.2" style={{filter: `blur(4px)`}}
-                                />
-                                <path 
-                                    d={generateRealisticPath(startNode, endNode)}
-                                    fill="none" stroke={routeColor} strokeWidth="4" strokeDasharray="20 40" className="animate-[dash_4s_linear_infinite]" strokeLinecap="round" strokeLinejoin="round" style={{filter: `drop-shadow(0 0 12px ${routeColor})`}}
-                                />
-                                <circle r="6" fill="#fff" className="animate-[follow_8s_linear_infinite]" style={{ offsetPath: `path('${generateRealisticPath(startNode, endNode)}')` }}>
-                                    <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite" />
-                                </circle>
-                            </g>
+                            <path 
+                                d={generateRealisticPath(startNode, endNode)}
+                                fill="none" stroke={routeColor} strokeWidth="6" strokeDasharray="15 15" className="animate-[dash_8s_linear_infinite]" strokeLinecap="round" strokeLinejoin="round" style={{filter: `drop-shadow(0 0 8px ${routeColor})`}}
+                            />
                         )}
 
-                        {/* User Marker with Neural Signature */}
+                        {/* User Marker */}
                         {userLoc === 'Center Pitch' ? (
                         <circle cx="200" cy="200" r="8" fill="#fff" className="animate-ping" label="Current Position" />
                         ) : (
                         <g transform={`translate(${getCoords(startNode.angle, startNode.radiusLevel).x}, ${getCoords(startNode.angle, startNode.radiusLevel).y})`}>
-                            <circle cx="0" cy="0" r="12" fill="none" stroke="#22c55e" strokeWidth="2" className="animate-ping" />
-                            <circle cx="0" cy="0" r="20" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.1" className="animate-pulse" />
+                            <circle cx="0" cy="0" r="10" fill="none" stroke="#fff" strokeWidth="2" className="animate-ping" />
                             <circle cx="0" cy="0" r="6" fill="#fff" />
                         </g>
                         )}

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const NodeCache = require('node-cache');
 const { getArenaState } = require('../services/simulator');
-const { getSmartNudge, getTacticalBriefing } = require('../services/ai_engine');
+const { getSmartNudge } = require('../services/ai_engine');
 const { auditLog } = require('../services/logger');
 
 // Demonstrates 'Advanced Performance Tuning' (Top-Tier Rubric)

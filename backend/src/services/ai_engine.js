@@ -57,34 +57,10 @@ const getSmartNudge = async (arenaData, currentLocation) => {
             nudgeText: responseText || null,
             targetZone: "Total Time Optimizer"
         };
-const getTacticalBriefing = async (arenaData) => {
-    const apiKey = await fetchApiKey();
-    if (!apiKey) return "Autonomous Mode: Synchronizing venue nodes...";
-
-    try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const stateSummary = Object.entries(arenaData)
-            .filter(([_, d]) => d.type === 'gate' || d.status === 'Heavy')
-            .map(([name, d]) => `${name}: ${d.waitTimeMins}m`)
-            .join(", ");
-
-        const prompt = `
-            You are the "Stadium Command Intel" AI.
-            Current Pressure Points: ${stateSummary || 'All systems normal.'}.
-            
-            TASK: Provide a 2-sentence tactical summary for the Admin Dashboard.
-            Sentence 1: The current most critical bottleneck.
-            Sentence 2: A proactive operational suggestion (e.g. divert traffic, open gate).
-            Tone: Military, concise, authoritative.
-        `;
-
-        const result = await model.generateContent(prompt);
-        return result.response.text().trim();
     } catch (error) {
-        return "Intelligence Feed Interrupted. Standard protocols active.";
+        console.error("Gemini AI Engine Error:", error);
+        return { nudgeText: null, targetZone: "Error Fallback" };
     }
 };
 
-module.exports = { getSmartNudge, getTacticalBriefing };
+module.exports = { getSmartNudge };
